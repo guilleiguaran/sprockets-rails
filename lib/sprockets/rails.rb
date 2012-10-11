@@ -90,9 +90,19 @@ module Sprockets
       end
 
       config.after_initialize do |app|
-        if app.assets
-          app.routes.prepend do
-            mount app.assets => app.config.assets.prefix
+        ::Sprockets::Rails::Bootstrap.new(app).run
+      end
+    end
+
+    class Bootstrap
+      def initialize(app)
+        @app = app
+      end
+
+      def run
+        if @app.assets
+          @app.routes.prepend do
+            mount @app.assets => @app.config.assets.prefix
           end
         end
       end

@@ -34,6 +34,16 @@ module Sprockets
               manifest.clobber
             end
           end
+
+          task :environment do
+            app = ::Rails.application
+            if app.config.assets.initialize_on_precompile
+              Rake::Task["environment"].invoke
+            else
+              app.initialize!(:assets)
+              Sprockets::Rails::Bootstrap.new(app).run
+            end
+          end
         end
       end
     end
